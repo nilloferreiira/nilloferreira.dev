@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+@theme {
+  --color-bg: #2C2C2C;
+  --color-shark: #1D1D1D;
+  --color-text-secondary: #B3B3B3;
+  --color-purple: #7C3AED;
+
+  /* Animações */
+  --animation-typing: typing 8s steps(25) infinite;
+  --animation-blink: blink 0.5s step-end infinite alternate;
+}
+
+/* Keyframes */
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  25% {
+    width: 100%;
+  }
+  50% {
+    width: 100%;
+  }
+  75% {
+    width: 0;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Utilitário para animação de digitação */
+.typing-animation {
+  animation: var(--animation-typing), var(--animation-blink);
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--color-text-secondary);
+}
+
+/* Tailwind custom utility para mobile */
+@media (max-width: 768px) {
+  .sm-mx-auto {
+    @apply mx-auto;
+  }
+}
