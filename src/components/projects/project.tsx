@@ -1,4 +1,5 @@
 import type { Project } from "@/types/project/project"
+import Image from "next/image"
 
 interface ProjectProps {
 	project: Project
@@ -12,7 +13,7 @@ export function Project({ project, language }: ProjectProps) {
 			target="_blank"
 			className="w-full bg-bg rounded-xl overflow-hidden hover:bg-bg/60 transition-all cursor-pointer"
 		>
-			<img src={project.imgSrc} alt="project-image" />
+			<Image src={project.imgSrc} alt="project-image" width={500} height={300} />
 
 			{/* text container  */}
 			<div className="p-4 space-y-4">
