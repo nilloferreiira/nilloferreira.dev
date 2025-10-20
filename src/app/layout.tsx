@@ -18,6 +18,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-BR">
+			<head>
+				<link rel="icon" href="favicon.ico" />
+			</head>
+
 			<QueryProvider>
 				<LanguageProvider language="pt-BR">
 					<body className="bg-bg px-4 py-6 lg:p-24 mx-auto w-full space-y-20 overflow-x-hidden">{children}</body>
