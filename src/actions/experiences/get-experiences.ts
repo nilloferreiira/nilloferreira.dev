@@ -1,10 +1,10 @@
 import type { Experience } from "@/types/experience/experience"
 
-export async function getExperiences(): Promise<Experience[]> {
+export async function getExperiences() {
 	// Simula delay de chamada à API
 	await new Promise((resolve) => setTimeout(resolve, 500))
 
-	return [
+	const experiences: Experience[] = [
 		{
 			id: "1",
 			title_en: "Experience",
@@ -29,4 +29,6 @@ export async function getExperiences(): Promise<Experience[]> {
 			description_pt: "🇺🇸 Inglês \n 🇧🇷 Português"
 		}
 	]
+
+	return experiences
 }

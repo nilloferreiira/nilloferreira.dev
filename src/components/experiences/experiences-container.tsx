@@ -2,40 +2,37 @@
 
 import { useLanguage } from "@/hooks/useLanguage"
 import { Experience } from "./experience"
+import { useLayoutEffect, useState } from "react"
+import type { Experience as ExperienceType } from "@/types/experience/experience"
+import { getExperiences } from "@/actions/experiences/get-experiences"
 
 export function ExperienceContainer() {
 	const { language } = useLanguage()
+	const [experiences, setExperiences] = useState<ExperienceType[]>([])
+
+	useLayoutEffect(() => {
+		async function fetchExperiences() {
+			const data = await getExperiences()
+			setExperiences(data)
+		}
+
+		fetchExperiences()
+	}, [])
 
 	return (
-		<div className="w-full flex flex-col lg:flex-row lg:items-start lg:justify-between mx-auto gap-10">
+		<div className="w-full flex flex-col items-center lg:flex-row lg:items-start lg:justify-between mx-auto gap-12 lg:gap-16">
 			{/* //TODO foreach de experience */}
-			<Experience
-				language={language}
-				title_en={"Experience"}
-				title_pt={"Experiência"}
-				description_en={
-					"Self-taught in front-end development since 2020, currently focused on development with React and Next.js, alongside building REST APIs with Node.js."
-				}
-				description_pt={
-					"Estudo desenvolvimento front-end desde 2020, atualmente com foco em React e Next.js, também trabalho na construção de APIs REST com Node.js."
-				}
-			/>
-
-			<Experience
-				language={language}
-				title_en={"Education"}
-				title_pt={"Educação"}
-				description_en={"Associate Degree in Systems Analysis and Development - Universidade Tiradentes 🎓"}
-				description_pt={"Graduação em Análise e Desenvolvimento de Sistemas - Universidade Tiradentes 🎓"}
-			/>
-
-			<Experience
-				language={language}
-				title_en={"Languages"}
-				title_pt={"Idiomas"}
-				description_en={"🇺🇸 English \n 🇧🇷 Portuguese"}
-				description_pt={"🇺🇸 Inglês \n 🇧🇷 Português"}
-			/>
+			{experiences &&
+				experiences.map((experience) => (
+					<Experience
+						key={experience.id}
+						language={language}
+						title_en={experience.title_en}
+						title_pt={experience.title_pt}
+						description_en={experience.description_en}
+						description_pt={experience.description_pt}
+					/>
+				))}
 		</div>
 	)
 }
