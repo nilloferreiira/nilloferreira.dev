@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { LanguageProvider } from "@/context/language-context"
+import { QueryProvider } from "@/context/query-provider"
 
 export const metadata: Metadata = {
 	title: "Nilloferreira.dev",
@@ -17,9 +18,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-BR">
-			<LanguageProvider language="pt-BR">
-				<body className="bg-bg px-4 py-6 lg:p-24 mx-auto w-full space-y-20 overflow-x-hidden">{children}</body>
-			</LanguageProvider>
+			<QueryProvider>
+				<LanguageProvider language="pt-BR">
+					<body className="bg-bg px-4 py-6 lg:p-24 mx-auto w-full space-y-20 overflow-x-hidden">{children}</body>
+				</LanguageProvider>
+			</QueryProvider>
 		</html>
 	)
 }

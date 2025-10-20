@@ -1,6 +1,7 @@
 import { ExperienceContainer } from "@/components/experiences/experiences-container"
 import { Header } from "@/components/header/header"
 import { SwitchLanguage } from "@/components/language/switch"
+import { ProjectContainer } from "@/components/projects/projects-container"
 
 export default function Home() {
 	return (
@@ -11,7 +12,7 @@ export default function Home() {
 			<Header />
 			<main className="lg:p-10 w-full flex flex-col items-start justify-center gap-20 ">
 				<ExperienceContainer />
-				{/* <ProjectContainer /> */}
+				<ProjectContainer />
 			</main>
 		</>
 	)
