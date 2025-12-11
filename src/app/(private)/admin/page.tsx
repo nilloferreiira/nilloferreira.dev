@@ -15,7 +15,7 @@ import { useState } from "react"
 
 export default function AdminPage() {
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-	const [isCreateModalOpen, setCreateIsModalOpen] = useState(false)
+	const [isCreateProjectOpen, setCreateProjectOpen] = useState(false)
 
 	// modals and editing state
 	const [isCreateExperienceOpen, setCreateExperienceOpen] = useState(false)
@@ -29,47 +29,18 @@ export default function AdminPage() {
 	const { data: experiences, isLoading: isLoadingExperiences } = useExperiences()
 	const isLoaded = !isLoadingProjects && !isLoadingExperiences
 
-	function toggleCreateProjectModal() {
-		setCreateIsModalOpen(!isCreateModalOpen)
-	}
-
-	function handleCreateProject(data: any) {
-		console.log("handleCreateProject", { data })
-		// exemplo mínimo: apenas logar. O usuário pode ligar uma action real aqui.
-	}
-
-	function openEditProject(project: Project) {
+	function openEditProjectModal(project: Project) {
 		setEditingProject(project)
 		setEditProjectOpen(true)
-	}
-
-	function submitEditProject(project: Project) {
-		console.log("submitEditProject", { project })
-		setEditProjectOpen(false)
-		setEditingProject(null)
 	}
 
 	function handleDeleteProject(id: string) {
 		console.log("handleDeleteProject", { id })
 	}
 
-	function toggleCreateProjectExperience() {
-		setCreateIsModalOpen(!isCreateModalOpen)
-	}
-
-	function handleCreateExperience(data: any) {
-		console.log("handleCreateExperience", { data })
-	}
-
 	function openEditExperience(experience: Experience) {
 		setEditingExperience(experience)
 		setEditExperienceOpen(true)
-	}
-
-	function submitEditExperience(experience: Experience) {
-		console.log("submitEditExperience", { experience })
-		setEditExperienceOpen(false)
-		setEditingExperience(null)
 	}
 
 	function handleDeleteExperience(id: string) {
@@ -86,7 +57,7 @@ export default function AdminPage() {
 						<h1 className="text-2xl lg:text-3xl font-bold">Admin Panel</h1>
 						<div className="space-x-2">
 							<button
-								onClick={() => toggleCreateProjectModal()}
+								onClick={() => setCreateProjectOpen(true)}
 								className="bg-purple text-white px-4 py-2 rounded-2xl shadow hover:brightness-95 transition"
 							>
 								New Project
@@ -105,7 +76,12 @@ export default function AdminPage() {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{projects &&
 								projects.map((p) => (
-									<AdminProjectCard key={p.id} project={p} onEdit={openEditProject} onDelete={handleDeleteProject} />
+									<AdminProjectCard
+										key={p.id}
+										project={p}
+										onEdit={openEditProjectModal}
+										onDelete={handleDeleteProject}
+									/>
 								))}
 						</div>
 					</section>
@@ -128,30 +104,16 @@ export default function AdminPage() {
 			)}
 
 			{/* Create Project Modal (separated) */}
-			<CreateProjectModal
-				isOpen={isCreateModalOpen}
-				onClose={() => setCreateIsModalOpen(false)}
-				onCreate={(data) => handleCreateProject(data)}
-			/>
+			<CreateProjectModal isOpen={isCreateProjectOpen} onClose={() => setCreateProjectOpen(false)} />
 
-			<CreateExperienceModal
-				isOpen={isCreateExperienceOpen}
-				onClose={() => setCreateExperienceOpen(false)}
-				onCreate={(data) => handleCreateExperience(data)}
-			/>
+			<CreateExperienceModal isOpen={isCreateExperienceOpen} onClose={() => setCreateExperienceOpen(false)} />
 
-			<EditProjectModal
-				isOpen={isEditProjectOpen}
-				onClose={() => setEditProjectOpen(false)}
-				project={editingProject}
-				onSave={(p) => submitEditProject(p)}
-			/>
+			<EditProjectModal isOpen={isEditProjectOpen} onClose={() => setEditProjectOpen(false)} project={editingProject} />
 
 			<EditExperienceModal
 				isOpen={isEditExperienceOpen}
 				onClose={() => setEditExperienceOpen(false)}
 				experience={editingExperience}
-				onSave={(e) => submitEditExperience(e)}
 			/>
 		</div>
 	)
