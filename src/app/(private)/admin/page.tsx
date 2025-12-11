@@ -103,7 +103,7 @@ export default function AdminPage() {
 				</div>
 			)}
 
-			{/* Create Project Modal (separated) */}
+			{/* Modals */}
 			<CreateProjectModal isOpen={isCreateProjectOpen} onClose={() => setCreateProjectOpen(false)} />
 
 			<CreateExperienceModal isOpen={isCreateExperienceOpen} onClose={() => setCreateExperienceOpen(false)} />
