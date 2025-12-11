@@ -2,53 +2,82 @@
 
 import { AdminExperienceCard } from "@/components/admin/admin-experience-card"
 import { AdminProjectCard } from "@/components/admin/admin-project-card"
-import Modal from "@/components/admin/modal"
+import { CreateProjectModal } from "@/components/admin/create-project-modal"
+import { CreateExperienceModal } from "@/components/admin/create-experience-modal"
+import { EditProjectModal } from "@/components/admin/edit-project-modal"
+import { EditExperienceModal } from "@/components/admin/edit-experience-modal"
 import { LoadingSpinner } from "@/components/loading/loading"
 import { useExperiences } from "@/hooks/experiences/useExperiences"
 import { useProjects } from "@/hooks/projects/useProjects"
 import { Project } from "@/types/project/project"
+import type { Experience } from "@/types/experience/experience"
 import { useState } from "react"
 
 export default function AdminPage() {
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 	const [isCreateModalOpen, setCreateIsModalOpen] = useState(false)
 
+	// modals and editing state
+	const [isCreateExperienceOpen, setCreateExperienceOpen] = useState(false)
+	const [isEditProjectOpen, setEditProjectOpen] = useState(false)
+	const [isEditExperienceOpen, setEditExperienceOpen] = useState(false)
+
+	const [editingProject, setEditingProject] = useState<Project | null>(null)
+	const [editingExperience, setEditingExperience] = useState<Experience | null>(null)
+
 	const { data: projects, isLoading: isLoadingProjects } = useProjects()
 	const { data: experiences, isLoading: isLoadingExperiences } = useExperiences()
 	const isLoaded = !isLoadingProjects && !isLoadingExperiences
 
-	function handleOpenCreateProject() {
+	function toggleCreateProjectModal() {
 		setCreateIsModalOpen(!isCreateModalOpen)
 	}
 
 	function handleCreateProject(data: any) {
-		console.log("handleCreate", { data })
+		console.log("handleCreateProject", { data })
 		// exemplo mínimo: apenas logar. O usuário pode ligar uma action real aqui.
 	}
 
-	function handleEditProject(project: Project) {
-		console.log("handleEdit", { project })
+	function openEditProject(project: Project) {
+		setEditingProject(project)
+		setEditProjectOpen(true)
+	}
+
+	function submitEditProject(project: Project) {
+		console.log("submitEditProject", { project })
+		setEditProjectOpen(false)
+		setEditingProject(null)
 	}
 
 	function handleDeleteProject(id: string) {
-		console.log("handleDelete", { id })
+		console.log("handleDeleteProject", { id })
+	}
+
+	function toggleCreateProjectExperience() {
+		setCreateIsModalOpen(!isCreateModalOpen)
 	}
 
 	function handleCreateExperience(data: any) {
-		console.log("handleCreate", { data })
-		// exemplo mínimo: apenas logar. O usuário pode ligar uma action real aqui.
+		console.log("handleCreateExperience", { data })
 	}
 
-	function handleEditExperience(experience: any) {
-		console.log("handleEdit", { experience })
+	function openEditExperience(experience: Experience) {
+		setEditingExperience(experience)
+		setEditExperienceOpen(true)
+	}
+
+	function submitEditExperience(experience: Experience) {
+		console.log("submitEditExperience", { experience })
+		setEditExperienceOpen(false)
+		setEditingExperience(null)
 	}
 
 	function handleDeleteExperience(id: string) {
-		console.log("handleDelete", { id })
+		console.log("handleDeleteExperience", { id })
 	}
 
 	return (
-		<div className="p-6 lg:p-12 bg-shark text-white rounded-xl">
+		<div className="p-6 lg:p-12 bg-shark text-white rounded-xl min-h-screen">
 			{!isLoaded ? (
 				<LoadingSpinner />
 			) : (
@@ -57,13 +86,13 @@ export default function AdminPage() {
 						<h1 className="text-2xl lg:text-3xl font-bold">Admin Panel</h1>
 						<div className="space-x-2">
 							<button
-								onClick={() => handleOpenCreateProject()}
+								onClick={() => toggleCreateProjectModal()}
 								className="bg-purple text-white px-4 py-2 rounded-2xl shadow hover:brightness-95 transition"
 							>
 								New Project
 							</button>
 							<button
-								onClick={() => handleCreateExperience({})}
+								onClick={() => setCreateExperienceOpen(true)}
 								className="bg-transparent border border-purple text-purple px-4 py-2 rounded-2xl hover:bg-purple/10 transition"
 							>
 								New Experience
@@ -76,7 +105,7 @@ export default function AdminPage() {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{projects &&
 								projects.map((p) => (
-									<AdminProjectCard key={p.id} project={p} onEdit={handleEditProject} onDelete={handleDeleteProject} />
+									<AdminProjectCard key={p.id} project={p} onEdit={openEditProject} onDelete={handleDeleteProject} />
 								))}
 						</div>
 					</section>
@@ -89,7 +118,7 @@ export default function AdminPage() {
 									<AdminExperienceCard
 										key={e.id}
 										experience={e}
-										onEdit={handleEditExperience}
+										onEdit={openEditExperience}
 										onDelete={handleDeleteExperience}
 									/>
 								))}
@@ -98,70 +127,32 @@ export default function AdminPage() {
 				</div>
 			)}
 
-			{/* Create Modal  */}
-			<Modal
+			{/* Create Project Modal (separated) */}
+			<CreateProjectModal
 				isOpen={isCreateModalOpen}
-				modalForm="create-project-form"
 				onClose={() => setCreateIsModalOpen(false)}
-				title="Create Project"
-			>
-				<form
-					id="create-project-form"
-					className="bg-shark p-4 rounded-lg space-y-3"
-					onSubmit={(e) => {
-						e.preventDefault()
-						const form = new FormData(e.currentTarget as HTMLFormElement)
-						const data = {
-							id: String(Date.now()),
-							title: String(form.get("title") ?? ""),
-							description_pt: String(form.get("description_pt") ?? ""),
-							description_en: String(form.get("description_en") ?? ""),
-							imgSrc: String(form.get("imgSrc") ?? ""),
-							url: String(form.get("url") ?? "")
-						}
-						handleCreateProject(data)
-						setCreateIsModalOpen(false)
-					}}
-				>
-					<div>
-						<label className="block text-sm text-[var(--color-text-secondary)] mb-1">Title</label>
-						<input
-							name="title"
-							required
-							className="w-full p-2 rounded-md bg-[var(--color-shark)] border border-white/5"
-						/>
-					</div>
+				onCreate={(data) => handleCreateProject(data)}
+			/>
 
-					<div>
-						<label className="block text-sm text-[var(--color-text-secondary)] mb-1">Description (PT)</label>
-						<textarea
-							name="description_pt"
-							rows={3}
-							className="w-full p-2 rounded-md bg-[var(--color-shark)] border border-white/5"
-						/>
-					</div>
+			<CreateExperienceModal
+				isOpen={isCreateExperienceOpen}
+				onClose={() => setCreateExperienceOpen(false)}
+				onCreate={(data) => handleCreateExperience(data)}
+			/>
 
-					<div>
-						<label className="block text-sm text-[var(--color-text-secondary)] mb-1">Description (EN)</label>
-						<textarea
-							name="description_en"
-							rows={3}
-							className="w-full p-2 rounded-md bg-[var(--color-shark)] border border-white/5"
-						/>
-					</div>
+			<EditProjectModal
+				isOpen={isEditProjectOpen}
+				onClose={() => setEditProjectOpen(false)}
+				project={editingProject}
+				onSave={(p) => submitEditProject(p)}
+			/>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-						<div>
-							<label className="block text-sm text-[var(--color-text-secondary)] mb-1">Image URL</label>
-							<input name="imgSrc" className="w-full p-2 rounded-md bg-[var(--color-shark)] border border-white/5" />
-						</div>
-						<div>
-							<label className="block text-sm text-[var(--color-text-secondary)] mb-1">Project URL</label>
-							<input name="url" className="w-full p-2 rounded-md bg-[var(--color-shark)] border border-white/5" />
-						</div>
-					</div>
-				</form>
-			</Modal>
+			<EditExperienceModal
+				isOpen={isEditExperienceOpen}
+				onClose={() => setEditExperienceOpen(false)}
+				experience={editingExperience}
+				onSave={(e) => submitEditExperience(e)}
+			/>
 		</div>
 	)
 }

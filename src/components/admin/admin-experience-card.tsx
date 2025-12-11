@@ -18,7 +18,7 @@ export function AdminExperienceCard({ experience, onEdit, onDelete }: AdminExper
 			<div className="flex gap-3 items-center">
 				<button
 					onClick={() => onEdit(experience)}
-					className="px-3 py-2 bg-[var(--color-purple)]/80 text-white rounded-xl hover:brightness-95 transition"
+					className="px-3 py-2 bg-purple/80 text-white rounded-xl hover:brightness-95 transition"
 				>
 					Edit
 				</button>
@@ -32,5 +32,3 @@ export function AdminExperienceCard({ experience, onEdit, onDelete }: AdminExper
 		</div>
 	)
 }
-
-export default AdminExperienceCard

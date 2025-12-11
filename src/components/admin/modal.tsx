@@ -23,7 +23,7 @@ interface ModalProps {
 	overlayConfirmMessage?: string
 }
 
-export default function Modal({
+export function Modal({
 	isOpen,
 	title,
 	children,
@@ -114,5 +114,3 @@ export default function Modal({
 		</div>
 	)
 }
-
-export { Modal }
