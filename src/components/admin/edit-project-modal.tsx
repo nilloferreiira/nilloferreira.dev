@@ -13,8 +13,6 @@ interface Props {
 }
 
 export function EditProjectModal({ isOpen, onClose, project }: Props) {
-	if (!project) return null
-
 	const { mutateAsync: updateProjectMutation, isPending } = useMutation({
 		mutationFn: updateProject,
 		onSuccess: (res) => {
@@ -29,6 +27,8 @@ export function EditProjectModal({ isOpen, onClose, project }: Props) {
 	async function handleEditProject(data: Project) {
 		await updateProjectMutation(data)
 	}
+
+	if (!project) return null
 
 	return (
 		<Modal
