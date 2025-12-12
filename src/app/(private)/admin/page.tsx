@@ -11,7 +11,8 @@ import { useExperiences } from "@/hooks/experiences/useExperiences"
 import { useProjects } from "@/hooks/projects/useProjects"
 import { Project } from "@/types/project/project"
 import type { Experience } from "@/types/experience/experience"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { getUsers } from "@/actions/get-users"
 
 export default function AdminPage() {
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -28,6 +29,15 @@ export default function AdminPage() {
 	const { data: projects, isLoading: isLoadingProjects } = useProjects()
 	const { data: experiences, isLoading: isLoadingExperiences } = useExperiences()
 	const isLoaded = !isLoadingProjects && !isLoadingExperiences
+
+	//TODO remover
+	useEffect(() => {
+		const users = async () => {
+			const data = await getUsers()
+			console.log("users", { data })
+		}
+		users()
+	}, [])
 
 	function openEditProjectModal(project: Project) {
 		setEditingProject(project)
