@@ -3,7 +3,7 @@ import { Project } from "@/types/project/project"
 interface AdminProjectCardProps {
 	project: Project
 	onEdit: (project: Project) => void
-	onDelete: (id: string) => void
+	onDelete: (id: number) => void
 }
 
 export function AdminProjectCard({ project, onEdit, onDelete }: AdminProjectCardProps) {

@@ -13,6 +13,9 @@ import { Project } from "@/types/project/project"
 import type { Experience } from "@/types/experience/experience"
 import { useEffect, useState } from "react"
 import { getUsers } from "@/actions/get-users"
+import { useMutation } from "@tanstack/react-query"
+import { queryClient } from "@/lib/react-query"
+import { deleteProject } from "@/actions/projects/delete-project"
 
 export default function AdminPage() {
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -29,23 +32,23 @@ export default function AdminPage() {
 	const { data: projects, isLoading: isLoadingProjects } = useProjects()
 	const { data: experiences, isLoading: isLoadingExperiences } = useExperiences()
 	const isLoaded = !isLoadingProjects && !isLoadingExperiences
-	console.log(projects)
-	//TODO remover
-	useEffect(() => {
-		const users = async () => {
-			const data = await getUsers()
-			console.log("users", { data })
-		}
-		users()
-	}, [])
 
 	function openEditProjectModal(project: Project) {
 		setEditingProject(project)
 		setEditProjectOpen(true)
 	}
 
-	function handleDeleteProject(id: string) {
-		console.log("handleDeleteProject", { id })
+	const { mutateAsync: deleteProjectMutation, isPending } = useMutation({
+		mutationFn: deleteProject,
+		onSuccess: (data, variables) => {
+			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
+				return oldData?.filter((p) => p.id !== variables) || []
+			})
+		}
+	})
+
+	async function handleDeleteProject(id: number) {
+		await deleteProjectMutation(id)
 	}
 
 	function openEditExperience(experience: Experience) {
@@ -90,7 +93,7 @@ export default function AdminPage() {
 										key={p.id}
 										project={p}
 										onEdit={openEditProjectModal}
-										onDelete={handleDeleteProject}
+										onDelete={() => handleDeleteProject(p.id)}
 									/>
 								))}
 						</div>
