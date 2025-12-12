@@ -36,7 +36,7 @@ export default function AdminPage() {
 		setEditProjectOpen(true)
 	}
 
-	const { mutateAsync: deleteProjectMutation, isPending } = useMutation({
+	const { mutateAsync: deleteProjectMutation } = useMutation({
 		mutationFn: deleteProject,
 		onSuccess: (_, variables) => {
 			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {

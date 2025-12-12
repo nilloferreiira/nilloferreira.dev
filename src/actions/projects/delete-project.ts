@@ -6,7 +6,7 @@ import { projects as projectsSchema } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
 export async function deleteProject(id: number) {
-	const project = db
+	const project = await db
 		.update(projectsSchema)
 		.set({
 			deletedAt: new Date()

@@ -1,7 +1,10 @@
 "use client"
 
+import { updateProject } from "@/actions/projects/update-project"
 import { Modal } from "./modal"
 import { Project } from "@/types/project/project"
+import { queryClient } from "@/lib/react-query"
+import { useMutation } from "@tanstack/react-query"
 
 interface Props {
 	isOpen: boolean
@@ -9,16 +12,33 @@ interface Props {
 	project: Project | null
 }
 
-function handleEditProject(data: Project) {
-	// Local default handling: log the edited project. Replace with real action if needed.
-	console.log("handleEditProject", { data })
-}
-
 export function EditProjectModal({ isOpen, onClose, project }: Props) {
 	if (!project) return null
 
+	const { mutateAsync: updateProjectMutation, isPending } = useMutation({
+		mutationFn: updateProject,
+		onSuccess: (res) => {
+			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
+				if (!oldData) return [res[0]]
+				return oldData.map((item) => (item.id === res[0].id ? res[0] : item))
+			})
+			onClose()
+		}
+	})
+
+	async function handleEditProject(data: Project) {
+		await updateProjectMutation(data)
+	}
+
 	return (
-		<Modal isOpen={isOpen} onClose={onClose} title="Edit Project" modalForm="edit-project-form" saveLabel="Save">
+		<Modal
+			isOpen={isOpen}
+			onClose={onClose}
+			title="Edit Project"
+			modalForm="edit-project-form"
+			saveLabel="Save"
+			isPending={isPending}
+		>
 			<form
 				id="edit-project-form"
 				className="bg-shark p-4 rounded-lg space-y-3"
