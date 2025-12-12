@@ -106,7 +106,7 @@ export function Modal({
 								type="submit"
 								disabled={isPending}
 								form={modalForm}
-								className={`px-4 py-2 rounded-xl bg-purple text-white hover:brightness-95 transition ${
+								className={`px-4 py-2 rounded-xl bg-primary text-white hover:brightness-95 transition ${
 									isPending ? "opacity-50 cursor-not-allowed" : ""
 								}`}
 							>

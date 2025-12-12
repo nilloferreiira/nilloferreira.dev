@@ -69,13 +69,13 @@ export default function AdminPage() {
 						<div className="space-x-2">
 							<button
 								onClick={() => setCreateProjectOpen(true)}
-								className="bg-purple text-white px-4 py-2 rounded-2xl shadow hover:brightness-95 transition"
+								className="bg-primary text-white px-4 py-2 rounded-2xl shadow hover:brightness-95 transition"
 							>
 								New Project
 							</button>
 							<button
 								onClick={() => setCreateExperienceOpen(true)}
-								className="bg-transparent border border-purple text-purple px-4 py-2 rounded-2xl hover:bg-purple/10 transition"
+								className="bg-transparent border border-primary text-primary px-4 py-2 rounded-2xl hover:bg-primary/10 transition"
 							>
 								New Experience
 							</button>

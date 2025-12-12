@@ -18,7 +18,7 @@ export function AdminProjectCard({ project, onEdit, onDelete }: AdminProjectCard
 			<div className="flex gap-3 items-center">
 				<button
 					onClick={() => onEdit(project)}
-					className="px-3 py-2 bg-purple/80 text-white rounded-xl hover:brightness-95 transition"
+					className="px-3 py-2 bg-primary/80 text-white rounded-xl hover:brightness-95 transition"
 				>
 					Edit
 				</button>
