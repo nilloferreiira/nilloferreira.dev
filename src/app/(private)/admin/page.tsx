@@ -40,7 +40,7 @@ export default function AdminPage() {
 
 	const { mutateAsync: deleteProjectMutation, isPending } = useMutation({
 		mutationFn: deleteProject,
-		onSuccess: (data, variables) => {
+		onSuccess: (_, variables) => {
 			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
 				return oldData?.filter((p) => p.id !== variables) || []
 			})
