@@ -11,14 +11,12 @@ import { useExperiences } from "@/hooks/experiences/useExperiences"
 import { useProjects } from "@/hooks/projects/useProjects"
 import { Project } from "@/types/project/project"
 import type { Experience } from "@/types/experience/experience"
-import { useEffect, useState } from "react"
-import { getUsers } from "@/actions/get-users"
+import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "@/lib/react-query"
 import { deleteProject } from "@/actions/projects/delete-project"
 
 export default function AdminPage() {
-	const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 	const [isCreateProjectOpen, setCreateProjectOpen] = useState(false)
 
 	// modals and editing state
