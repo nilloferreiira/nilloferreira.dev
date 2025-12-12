@@ -1,25 +1,19 @@
 "use client"
 
 import { useLanguage } from "@/hooks/useLanguage"
-import { useProjects } from "@/hooks/projects/useProjects"
 import { Project } from "./project"
-import { LoadingSpinner } from "../loading/loading"
+import { Project as ProjectType } from "@/types/project/project"
 
-export function ProjectContainer() {
+interface ProjectsContainerProps {
+	projects: ProjectType[]
+}
+
+export function ProjectContainer({ projects }: ProjectsContainerProps) {
 	const { language } = useLanguage()
-	const { data: projects, isLoading } = useProjects()
 
 	return (
 		<div className="bg-shark w-full flex flex-col items-start justify-center p-4 lg:p-16 rounded-lg space-y-6 lg:space-y-12">
-			{isLoading ? (
-				<h1 className="text-zinc-100 font-semibold text-3xl flex">
-					Carregando meus projetos ... <LoadingSpinner />
-				</h1>
-			) : (
-				<h1 className="text-zinc-100 font-semibold text-3xl">
-					{language ? "My projects " : "Meus projetos "}&#x1F447;
-				</h1>
-			)}
+			<h1 className="text-zinc-100 font-semibold text-3xl">{language ? "My projects " : "Meus projetos "}&#x1F447;</h1>
 
 			{/* projects grid  */}
 			<div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16">
