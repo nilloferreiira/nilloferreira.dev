@@ -29,7 +29,7 @@ export default function AdminPage() {
 	const { data: projects, isLoading: isLoadingProjects } = useProjects()
 	const { data: experiences, isLoading: isLoadingExperiences } = useExperiences()
 	const isLoaded = !isLoadingProjects && !isLoadingExperiences
-
+	console.log(projects)
 	//TODO remover
 	useEffect(() => {
 		const users = async () => {

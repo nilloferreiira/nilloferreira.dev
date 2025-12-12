@@ -10,6 +10,7 @@ interface ModalProps {
 	children?: React.ReactNode
 	onClose: () => void
 	onSave?: () => void
+	isPending?: boolean
 	saveLabel?: string
 	/**
 	 * Allow closing when clicking the overlay. Default: false (don't close)
@@ -29,6 +30,7 @@ export function Modal({
 	children,
 	onClose,
 	onSave,
+	isPending,
 	modalForm,
 	saveLabel = "Save",
 	closeOnOverlayClick = false,
@@ -102,10 +104,13 @@ export function Modal({
 							<button
 								onClick={onSave}
 								type="submit"
+								disabled={isPending}
 								form={modalForm}
-								className="px-4 py-2 rounded-xl bg-purple text-white hover:brightness-95 transition"
+								className={`px-4 py-2 rounded-xl bg-purple text-white hover:brightness-95 transition ${
+									isPending ? "opacity-50 cursor-not-allowed" : ""
+								}`}
 							>
-								{saveLabel}
+								{isPending ? "Saving..." : saveLabel}
 							</button>
 						)}
 					</footer>

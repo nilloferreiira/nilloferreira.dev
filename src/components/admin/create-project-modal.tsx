@@ -1,21 +1,41 @@
 "use client"
 
+import { createProject } from "@/actions/projects/create-project"
 import { Modal } from "./modal"
 import { Project } from "@/types/project/project"
+import { useMutation } from "@tanstack/react-query"
+import { queryClient } from "@/lib/react-query"
 
 interface Props {
 	isOpen: boolean
 	onClose: () => void
 }
 
-function handleCreateProject(data: Project) {
-	// Local default handling: log the created project. Replace with real action if needed.
-	console.log("handleCreateProject", { data })
-}
-
 export function CreateProjectModal({ isOpen, onClose }: Props) {
+	const { mutateAsync: createProjectMutation, isPending } = useMutation({
+		mutationFn: createProject,
+		onSuccess: (res) => {
+			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
+				if (!oldData) return [res[0]]
+				return [...oldData, res[0]]
+			})
+			onClose()
+		}
+	})
+
+	async function handleCreateProject(data: Project) {
+		await createProjectMutation(data)
+	}
+
 	return (
-		<Modal isOpen={isOpen} onClose={onClose} title="Create Project" modalForm="create-project-form" saveLabel="Create">
+		<Modal
+			isOpen={isOpen}
+			onClose={onClose}
+			title="Create Project"
+			modalForm="create-project-form"
+			saveLabel="Create"
+			isPending={isPending}
+		>
 			<form
 				id="create-project-form"
 				className="bg-shark p-4 rounded-lg space-y-3"
@@ -23,7 +43,8 @@ export function CreateProjectModal({ isOpen, onClose }: Props) {
 					e.preventDefault()
 					const form = new FormData(e.currentTarget as HTMLFormElement)
 					const data: Project = {
-						id: String(Date.now()),
+						id: 0, // ID will be set by the server/database
+
 						title: String(form.get("title") ?? ""),
 						description_pt: String(form.get("description_pt") ?? ""),
 						description_en: String(form.get("description_en") ?? ""),
@@ -31,7 +52,6 @@ export function CreateProjectModal({ isOpen, onClose }: Props) {
 						url: String(form.get("url") ?? "")
 					}
 					handleCreateProject(data)
-					onClose()
 				}}
 			>
 				<div>

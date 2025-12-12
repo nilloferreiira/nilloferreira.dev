@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "db:migrate": "drizzle-kit migrate --config ./src/db/drizzle.config.ts",
+    "db:generate": "drizzle-kit generate --config ./src/db/drizzle.config.ts",
     "start": "next start",
     "lint": "eslint"
   },
