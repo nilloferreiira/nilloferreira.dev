@@ -3,7 +3,7 @@ import { Experience } from "@/types/experience/experience"
 interface AdminExperienceCardProps {
 	experience: Experience
 	onEdit: (experience: Experience) => void
-	onDelete: (id: string) => void
+	onDelete: (id: number) => void
 }
 
 export function AdminExperienceCard({ experience, onEdit, onDelete }: AdminExperienceCardProps) {

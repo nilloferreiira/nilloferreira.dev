@@ -15,6 +15,7 @@ import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "@/lib/react-query"
 import { deleteProject } from "@/actions/projects/delete-project"
+import { deleteExperience } from "@/actions/experiences/delete-experience"
 
 export default function AdminPage() {
 	const [isCreateProjectOpen, setCreateProjectOpen] = useState(false)
@@ -54,8 +55,17 @@ export default function AdminPage() {
 		setEditExperienceOpen(true)
 	}
 
-	function handleDeleteExperience(id: string) {
-		console.log("handleDeleteExperience", { id })
+	const { mutateAsync: deleteExperienceMutation } = useMutation({
+		mutationFn: deleteExperience,
+		onSuccess: (_, variables) => {
+			queryClient.setQueryData(["experiences"], (oldData: Experience[] | undefined) => {
+				return oldData?.filter((e) => e.id !== variables) || []
+			})
+		}
+	})
+
+	async function handleDeleteExperience(id: number) {
+		await deleteExperienceMutation(id)
 	}
 
 	return (

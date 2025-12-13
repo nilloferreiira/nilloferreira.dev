@@ -1,7 +1,10 @@
 "use client"
 
+import { updateExperience } from "@/actions/experiences/update-experience"
 import { Modal } from "./modal"
 import type { Experience } from "@/types/experience/experience"
+import { queryClient } from "@/lib/react-query"
+import { useMutation } from "@tanstack/react-query"
 
 interface Props {
 	isOpen: boolean
@@ -9,16 +12,33 @@ interface Props {
 	experience: Experience | null
 }
 
-function handleEditExperience(data: Experience) {
-	// Local default handling: log the edited experience. Replace with real action if needed.
-	console.log("handleEditExperience", { data })
-}
-
 export function EditExperienceModal({ isOpen, onClose, experience }: Props) {
+	const { mutateAsync: updateExperienceMutation, isPending } = useMutation({
+		mutationFn: updateExperience,
+		onSuccess: (res) => {
+			queryClient.setQueryData(["experiences"], (oldData: Experience[] | undefined) => {
+				if (!oldData) return [res[0]]
+				return oldData.map((item) => (item.id === res[0].id ? res[0] : item))
+			})
+			onClose()
+		}
+	})
+
+	async function handleEditExperience(data: Experience) {
+		await updateExperienceMutation(data)
+	}
+
 	if (!experience) return null
 
 	return (
-		<Modal isOpen={isOpen} onClose={onClose} title="Edit Experience" modalForm="edit-experience-form" saveLabel="Save">
+		<Modal
+			isOpen={isOpen}
+			onClose={onClose}
+			title="Edit Experience"
+			modalForm="edit-experience-form"
+			saveLabel="Save"
+			isPending={isPending}
+		>
 			<form
 				id="edit-experience-form"
 				className="bg-shark p-4 rounded-lg space-y-3"
@@ -33,7 +53,6 @@ export function EditExperienceModal({ isOpen, onClose, experience }: Props) {
 						description_en: String(form.get("description_en") ?? "")
 					}
 					handleEditExperience(data)
-					onClose()
 				}}
 			>
 				<div>
