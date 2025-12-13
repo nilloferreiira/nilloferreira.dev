@@ -1,23 +1,21 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { Project } from "../../types/project/project"
-import { projects as projectsSchema } from "@/db/schema"
+import { Experience } from "@/types/experience/experience"
+import { experiences as experiencesSchema } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
-export async function updateProject(data: Project) {
-	const project = await db
-		.update(projectsSchema)
+export async function updateExperience(data: Experience) {
+	const experience = await db
+		.update(experiencesSchema)
 		.set({
-			title: data.title,
+			title_en: data.title_en,
+			title_pt: data.title_pt,
 			description_en: data.description_en,
-			description_pt: data.description_pt,
-			imgSrc: data.imgSrc,
-			url: data.url
+			description_pt: data.description_pt
 		})
-		.where(eq(projectsSchema.id, data.id))
+		.where(eq(experiencesSchema.id, data.id))
 		.returning()
 
-	console.log("Updated project:", project)
-	return project
+	return experience
 }

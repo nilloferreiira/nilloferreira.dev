@@ -1,16 +1,16 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { Project } from "../../types/project/project"
-import { projects as projectsSchema } from "@/db/schema"
+import { experiences as experiencesSchema } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
-export async function deleteProject(id: number) {
-	const project = await db
-		.update(projectsSchema)
+export async function deleteExperience(id: number) {
+	const experience = await db
+		.update(experiencesSchema)
 		.set({
 			deletedAt: new Date()
 		})
-		.where(eq(projectsSchema.id, id))
-	return project
+		.where(eq(experiencesSchema.id, id))
+
+	return experience
 }
