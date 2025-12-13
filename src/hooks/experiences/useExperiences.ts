@@ -1,4 +1,4 @@
-import { getExperiences } from "@/actions/experiences/get-experiences"
+import { getExperiences } from "@/actions/experiences/get-experience"
 import { Experience } from "@/types/experience/experience"
 import { useQuery } from "@tanstack/react-query"
 
