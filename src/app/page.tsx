@@ -11,7 +11,6 @@ import { useProjects } from "@/hooks/projects/useProjects"
 export default function Home() {
 	const { data: projects, isLoading: isLoadingProjects } = useProjects()
 	const { data: experiences, isLoading: isLoadingExperiences } = useExperiences()
-	console.log({ isLoadingExperiences, isLoadingProjects })
 	const isLoading = isLoadingProjects && isLoadingExperiences
 	return (
 		<>

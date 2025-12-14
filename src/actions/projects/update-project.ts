@@ -18,6 +18,5 @@ export async function updateProject(data: Project) {
 		.where(eq(projectsSchema.id, data.id))
 		.returning()
 
-	console.log("Updated project:", project)
 	return project
 }
