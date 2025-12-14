@@ -12,6 +12,7 @@ import { useProjects } from "@/hooks/projects/useProjects"
 import { Project } from "@/types/project/project"
 import type { Experience } from "@/types/experience/experience"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "@/lib/react-query"
 import { deleteProject } from "@/actions/projects/delete-project"
@@ -68,6 +69,17 @@ export default function AdminPage() {
 		await deleteExperienceMutation(id)
 	}
 
+	const router = useRouter()
+
+	async function handleSignOut() {
+		try {
+			await fetch("/api/sign-out", { method: "GET" })
+			router.push("/admin/login")
+		} catch (err) {
+			console.error("Sign out failed", err)
+		}
+	}
+
 	return (
 		<div className="p-6 lg:p-12 bg-shark text-white rounded-xl min-h-screen">
 			{!isLoaded ? (
@@ -88,6 +100,12 @@ export default function AdminPage() {
 								className="bg-transparent border border-primary text-primary px-4 py-2 rounded-2xl hover:bg-primary/10 transition"
 							>
 								New Experience
+							</button>
+							<button
+								onClick={handleSignOut}
+								className="bg-red-600 text-white px-4 py-2 rounded-2xl shadow hover:brightness-95 transition"
+							>
+								Sign out
 							</button>
 						</div>
 					</header>
