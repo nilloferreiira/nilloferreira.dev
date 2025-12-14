@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createHash } from "node:crypto"
+import bcrypt from "bcrypt"
 import { env } from "@/lib/env"
 import { z } from "zod"
+import { db } from "@/lib/db"
 
 const loginSchema = z.object({
 	email: z.email("Email inválido"),
@@ -9,9 +10,6 @@ const loginSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
-	const ADMIN_EMAIL = env.ADMIN_EMAIL
-	const ADMIN_PASSWORD = env.ADMIN_PASSWORD
-
 	const body = await request.json()
 	const parsedBody = loginSchema.safeParse(body)
 	const sessions = new Set<string>()
@@ -22,18 +20,19 @@ export async function POST(request: NextRequest) {
 
 	// hash da senha
 	const { email, password } = parsedBody.data
-	const hashedPassword = createHash("sha256").update(password).digest("hex")
-	// enviar os dados pro banco e validar
-	// const exists = db.query.users.findFirst({
-	// 	where: (users, { eq }) => eq(users.email, email) && eq(users.password, hashedPassword)
-	// })
 
-	// if (!exists) {
-	// 	return NextResponse.json({ message: "Email ou senha inválidos" }, { status: 401 })
-	// }
+	const user = await db.query.users.findFirst({
+		where: (users, { eq }) => eq(users.email, email)
+	})
 
-	if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
-		return Response.json({ error: "Credenciais inválidas" }, { status: 401 })
+	if (!user) {
+		return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 })
+	}
+
+	const isValidPassword = bcrypt.compareSync(password, user.password)
+
+	if (!isValidPassword) {
+		return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 })
 	}
 
 	const sessionId = crypto.randomUUID()

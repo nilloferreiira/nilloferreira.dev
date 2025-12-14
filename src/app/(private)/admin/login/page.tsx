@@ -1,17 +1,19 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+const loginSchema = z.object({
+	email: z.email(),
+	password: z.string().min(6)
+})
+
+type LoginFormInputs = z.infer<typeof loginSchema>
+
 export default function AdminLoginPage() {
-	const loginSchema = z.object({
-		email: z.email(),
-		password: z.string().min(6)
-	})
-
-	type LoginFormInputs = z.infer<typeof loginSchema>
-
+	const router = useRouter()
 	const {
 		register,
 		handleSubmit,
@@ -33,11 +35,9 @@ export default function AdminLoginPage() {
 			return
 		}
 		const result = await response.json()
-		// Handle successful login
-	}
-
-	async function handleSignOut() {
-		await fetch("/api/sign-out", { method: "GET" })
+		if (result.ok) {
+			return router.push("/admin")
+		}
 	}
 
 	return (
