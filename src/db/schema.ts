@@ -17,6 +17,7 @@ export const projects = pgTable("projects", {
 	description_pt: text("description_pt").notNull(),
 	imgSrc: varchar("img_src").notNull(),
 	url: varchar("url").notNull(),
+	position: serial("position").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 	deletedAt: timestamp("deleted_at")
@@ -28,6 +29,7 @@ export const experiences = pgTable("experiences", {
 	title_pt: varchar("title_pt").notNull(),
 	description_en: text("description_en").notNull(),
 	description_pt: text("description_pt").notNull(),
+	position: serial("position").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 	deletedAt: timestamp("deleted_at")
