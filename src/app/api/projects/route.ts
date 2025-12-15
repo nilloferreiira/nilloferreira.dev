@@ -3,11 +3,15 @@ export const runtime = "nodejs"
 import { NextRequest, NextResponse } from "next/server"
 import { projects as projectsSchema } from "@/db/schema"
 import { db } from "@/lib/db"
-import { isNull, eq } from "drizzle-orm"
+import { isNull, eq, asc } from "drizzle-orm"
 
 export async function GET() {
 	try {
-		const projects = await db.select().from(projectsSchema).where(isNull(projectsSchema.deletedAt))
+		const projects = await db
+			.select()
+			.from(projectsSchema)
+			.where(isNull(projectsSchema.deletedAt))
+			.orderBy(asc(projectsSchema.position))
 		return NextResponse.json({ ok: true, data: projects })
 	} catch (err) {
 		console.error("GET /api/projects error:", err)

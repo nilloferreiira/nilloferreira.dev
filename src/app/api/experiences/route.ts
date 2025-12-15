@@ -3,12 +3,17 @@ export const runtime = "nodejs"
 import { NextRequest, NextResponse } from "next/server"
 import { experiences as experiencesSchema } from "@/db/schema"
 import { db } from "@/lib/db"
-import { isNull } from "drizzle-orm"
+import { asc, isNull } from "drizzle-orm"
 import { eq } from "drizzle-orm"
 
 export async function GET() {
 	try {
-		const experiences = await db.select().from(experiencesSchema).where(isNull(experiencesSchema.deletedAt))
+		const experiences = await db
+			.select()
+			.from(experiencesSchema)
+			.where(isNull(experiencesSchema.deletedAt))
+			.orderBy(asc(experiencesSchema.position))
+
 		return NextResponse.json({ ok: true, data: experiences })
 	} catch (err) {
 		console.error("GET /api/experiences error:", err)
