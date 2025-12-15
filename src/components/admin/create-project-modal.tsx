@@ -1,6 +1,6 @@
 "use client"
 
-import { createProject } from "@/actions/projects/create-project"
+// Use API /api/projects instead of server action
 import { Modal } from "./modal"
 import { Project } from "@/types/project/project"
 import { useMutation } from "@tanstack/react-query"
@@ -13,7 +13,16 @@ interface Props {
 
 export function CreateProjectModal({ isOpen, onClose }: Props) {
 	const { mutateAsync: createProjectMutation, isPending } = useMutation({
-		mutationFn: createProject,
+		mutationFn: async (data: Project) => {
+			const res = await fetch("/api/projects", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			})
+			if (!res.ok) throw new Error("Erro ao criar projeto")
+			const json = await res.json()
+			return json.data
+		},
 		onSuccess: (res) => {
 			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
 				if (!oldData) return [res[0]]

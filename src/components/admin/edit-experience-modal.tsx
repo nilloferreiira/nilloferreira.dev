@@ -1,6 +1,6 @@
 "use client"
 
-import { updateExperience } from "@/actions/experiences/update-experience"
+// Use API /api/experiences for updates instead of server action
 import { Modal } from "./modal"
 import type { Experience } from "@/types/experience/experience"
 import { queryClient } from "@/lib/react-query"
@@ -14,7 +14,16 @@ interface Props {
 
 export function EditExperienceModal({ isOpen, onClose, experience }: Props) {
 	const { mutateAsync: updateExperienceMutation, isPending } = useMutation({
-		mutationFn: updateExperience,
+		mutationFn: async (data: Experience) => {
+			const res = await fetch("/api/experiences", {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			})
+			if (!res.ok) throw new Error("Erro ao atualizar experiência")
+			const json = await res.json()
+			return json.data
+		},
 		onSuccess: (res) => {
 			queryClient.setQueryData(["experiences"], (oldData: Experience[] | undefined) => {
 				if (!oldData) return [res[0]]

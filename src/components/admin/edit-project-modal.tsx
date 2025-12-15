@@ -1,6 +1,6 @@
 "use client"
 
-import { updateProject } from "@/actions/projects/update-project"
+// Use API /api/projects for update instead of server action
 import { Modal } from "./modal"
 import { Project } from "@/types/project/project"
 import { queryClient } from "@/lib/react-query"
@@ -14,7 +14,16 @@ interface Props {
 
 export function EditProjectModal({ isOpen, onClose, project }: Props) {
 	const { mutateAsync: updateProjectMutation, isPending } = useMutation({
-		mutationFn: updateProject,
+		mutationFn: async (data: Project) => {
+			const res = await fetch("/api/projects", {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			})
+			if (!res.ok) throw new Error("Erro ao atualizar projeto")
+			const json = await res.json()
+			return json.data
+		},
 		onSuccess: (res) => {
 			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
 				if (!oldData) return [res[0]]

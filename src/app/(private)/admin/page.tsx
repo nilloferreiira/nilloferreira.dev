@@ -15,8 +15,6 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "@/lib/react-query"
-import { deleteProject } from "@/actions/projects/delete-project"
-import { deleteExperience } from "@/actions/experiences/delete-experience"
 
 export default function AdminPage() {
 	const [isCreateProjectOpen, setCreateProjectOpen] = useState(false)
@@ -39,7 +37,16 @@ export default function AdminPage() {
 	}
 
 	const { mutateAsync: deleteProjectMutation } = useMutation({
-		mutationFn: deleteProject,
+		mutationFn: async (id: number) => {
+			const res = await fetch("/api/projects", {
+				method: "DELETE",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ id })
+			})
+			if (!res.ok) throw new Error("Erro ao deletar projeto")
+			const json = await res.json()
+			return json
+		},
 		onSuccess: (_, variables) => {
 			queryClient.setQueryData(["projects"], (oldData: Project[] | undefined) => {
 				return oldData?.filter((p) => p.id !== variables) || []
@@ -57,7 +64,16 @@ export default function AdminPage() {
 	}
 
 	const { mutateAsync: deleteExperienceMutation } = useMutation({
-		mutationFn: deleteExperience,
+		mutationFn: async (id: number) => {
+			const res = await fetch("/api/experiences", {
+				method: "DELETE",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ id })
+			})
+			if (!res.ok) throw new Error("Erro ao deletar experiência")
+			const json = await res.json()
+			return json
+		},
 		onSuccess: (_, variables) => {
 			queryClient.setQueryData(["experiences"], (oldData: Experience[] | undefined) => {
 				return oldData?.filter((e) => e.id !== variables) || []

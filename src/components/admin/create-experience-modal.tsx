@@ -1,6 +1,6 @@
 "use client"
 
-import { createExperience } from "@/actions/experiences/create-experience"
+// Using API route /api/experiences instead of server action
 import { Modal } from "./modal"
 import type { Experience } from "@/types/experience/experience"
 import { useMutation } from "@tanstack/react-query"
@@ -13,8 +13,18 @@ interface Props {
 
 export function CreateExperienceModal({ isOpen, onClose }: Props) {
 	const { mutateAsync: createExperienceMutation, isPending } = useMutation({
-		mutationFn: createExperience,
+		mutationFn: async (data: Experience) => {
+			const res = await fetch("/api/experiences", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			})
+			if (!res.ok) throw new Error("Erro ao criar experiência")
+			const json = await res.json()
+			return json.data
+		},
 		onSuccess: (res) => {
+			// res is the created record(s) array from the API
 			queryClient.setQueryData(["experiences"], (oldData: Experience[] | undefined) => {
 				if (!oldData) return [res[0]]
 				return [...oldData, res[0]]
