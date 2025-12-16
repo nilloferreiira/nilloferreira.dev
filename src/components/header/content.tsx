@@ -33,6 +33,22 @@ export function HeaderContent() {
 				</div>
 			</div>
 
+			<div className="px-8">
+				<div className="flex flex-col  gap-2">
+					<span className="text-text-secondary">
+						<strong className="text-zinc-100">{language === "en" ? "Degree: " : "Formação: "}</strong>
+						{language === "en" ? "Systems Analysis and Development" : "Análise e Desenvolvimento de Sistemas"}
+					</span>
+					<span className="text-text-secondary flex items-center gap-2">
+						<strong className="text-zinc-100">{language === "en" ? "English" : "Inglês"}</strong>
+						<span className="text-text-secondary">—</span>
+						<span className="text-text-secondary">
+							{language === "en" ? "B2 (Upper-intermediate)" : "nível B2 (intermediário avançado)"}
+						</span>
+					</span>
+				</div>
+			</div>
+
 			{/* links  */}
 			<div className="w-96 space-y-5">
 				<Links />
