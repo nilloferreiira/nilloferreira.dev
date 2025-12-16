@@ -13,7 +13,6 @@ export function ExperienceContainer({ experiences }: ExperiencesContainerProps) 
 
 	return (
 		<div className="w-full flex flex-col items-center lg:flex-row lg:items-start justify-evenly mx-auto gap-12 lg:gap-16">
-			{/* //TODO foreach de experience */}
 			{experiences &&
 				experiences.map((experience) => (
 					<Experience
