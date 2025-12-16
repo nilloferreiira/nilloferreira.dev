@@ -17,7 +17,7 @@ export function Experience({ language, title_en, title_pt, description_en, descr
 	}
 
 	return (
-		<div className="text-center lg:text-left lg:max-w-md space-y-5 lg:space-y-10">
+		<div className="text-center lg:text-left lg:max-w-lg space-y-5 lg:space-y-10">
 			<h2 className="text-zinc-100 font-bold text-3xl lg:text-4xl">{language == "en" ? title_en : title_pt}</h2>
 			<p className="text-text-secondary text-2xl">{formatText(language == "en" ? description_en : description_pt)}</p>
 		</div>

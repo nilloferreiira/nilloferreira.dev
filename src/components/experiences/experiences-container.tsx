@@ -12,7 +12,7 @@ export function ExperienceContainer({ experiences }: ExperiencesContainerProps) 
 	const { language } = useLanguage()
 
 	return (
-		<div className="w-full flex flex-col items-center lg:flex-row lg:items-start justify-evenly mx-auto gap-12 lg:gap-16">
+		<div className="w-full flex flex-col items-center lg:flex-row lg:items-start justify-evenly mx-auto gap-12 lg:gap-16 flex-wrap">
 			{experiences &&
 				experiences.map((experience) => (
 					<Experience
